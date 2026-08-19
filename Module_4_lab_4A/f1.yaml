@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: pcf, namespace: cnf-lab}
+spec:
+  replicas: 2
+  selector: {matchLabels: {cnf: pcf}}
+  template:
+    metadata: {labels: {cnf: pcf}}
+    spec:
+      containers:
+        - name: pcf
+          image: nginx:1.27-alpne          # note the typo

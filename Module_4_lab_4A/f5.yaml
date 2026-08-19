@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata: {name: vdu, namespace: cnf-lab, labels: {cnf: vdu}}
+spec:
+  nodeSelector:
+    accelerator: fpga-l1            # no node has this label
+  containers:
+    - name: vdu
+      image: nginx:1.27-alpine
+      resources:
+        requests: {cpu: "200m", memory: "128Mi"}     # more than any node has

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata: {name: nrf-config, namespace: cnf-lab}
+data:
+  nrf.conf: "nf-instance-id: 0001"
+---
+apiVersion: v1
+kind: Pod
+metadata: {name: nrf, namespace: cnf-lab, labels: {cnf: nrf}}
+spec:
+  containers:
+    - name: nrf
+      image: nginx:1.27-alpine
+      env:
+        - name: NRF_PROFILE
+          valueFrom:
+            configMapKeyRef:
+              name: nrf-config
+              key: profile.json          

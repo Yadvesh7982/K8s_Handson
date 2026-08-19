@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: ausf, namespace: cnf-lab}
+spec:
+  replicas: 2
+  selector: {matchLabels: {cnf: ausf}}
+  template:
+    metadata: {labels: {cnf: ausf}}
+    spec:
+      containers:
+        - name: ausf
+          image: nginx:1.27-alpine
+          ports: [{containerPort: 80}]
+---
+apiVersion: v1
+kind: Service
+metadata: {name: ausf-sbi, namespace: cnf-lab}
+spec:
+  selector: {cnf: ausf-sbi}        # WRONG: no pod carries this label
+  ports: [{port: 8080, targetPort: 80}]
