@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: upf-cdr-pvc
+  namespace: upf
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: cnf-local-fast
+  resources:
+    requests:
+      storage: 2Gi

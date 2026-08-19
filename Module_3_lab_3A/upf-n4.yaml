@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: upf
+  namespace: upf
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      cnf: upf
+  template:
+    metadata:
+      labels:
+        cnf: upf
+        component: user-plane
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: minikube-m02
+      containers:
+        - name: upf-sim
+          image: nginx:1.27-alpine
+          ports:
+            - containerPort: 80
+              name: n4-sim
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            periodSeconds: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: upf-n4
+  namespace: upf
+spec:
+  type: ClusterIP
+  selector:
+    cnf: upf
+  ports:
+    - name: n4-sim
+      port: 8805
+      targetPort: 80
+      protocol: TCP

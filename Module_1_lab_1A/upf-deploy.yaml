@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: upf-cdr-writer
+  namespace: upf
+  labels:
+    cnf: upf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      cnf: upf
+  template:
+    metadata:
+      labels:
+        cnf: upf
+    spec:
+      containers:
+        - name: upf-sim
+          image: busybox:1.36
+          command:
+            - /bin/sh
+            - -c
+            - >
+              while true; do
+                echo "$(date -Iseconds) CDR imsi=42101$(shuf -i 1000000-9999999 -n1 2>/dev/null || echo 1234567) bytes=8192" >> /var/lib/upf/cdr/records.log;
+                sleep 1;
+              done
+          volumeMounts:
+            - name: cdr
+              mountPath: /var/lib/upf/cdr
+      volumes:
+        - name: cdr
+          persistentVolumeClaim:
+            claimName: upf-cdr-pvc

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: amf-config
+  namespace: amf
+data:
+  amf.conf: |
+    plmn: 405-861
+    served-guami: 405-861-000001
+    ngap-port: 38412
+    log-level: info
+

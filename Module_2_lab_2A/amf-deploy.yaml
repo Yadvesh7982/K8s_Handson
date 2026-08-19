@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: amf
+  namespace: amf
+  labels:
+    cnf: amf
+spec:
+  replicas: 4
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      cnf: amf
+  template:
+    metadata:
+      labels:
+        cnf: amf
+        release: r1
+    spec:
+      nodeSelector:
+        cnf-role: control-plane-nf
+      containers:
+        - name: amf
+          image: nginx:1.27-alpine
+          ports:
+            - containerPort: 80
+              name: sbi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 3
+            periodSeconds: 3
+            failureThreshold: 2
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+            limits:
+              cpu: "100m"
+              memory: "64Mi"
+          volumeMounts:
+            - name: config
+              mountPath: /etc/amf
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: amf-config
