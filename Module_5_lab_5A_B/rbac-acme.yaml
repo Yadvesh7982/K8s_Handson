@@ -1,0 +1,26 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: upf
+  name: cnf-readonly
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "pods/log", "events", "configmaps", "services"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "replicasets", "statefulsets"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  namespace: upf
+  name: acme-support-readonly
+subjects:
+  - kind: ServiceAccount
+    name: acme-support
+    namespace: upf
+roleRef:
+  kind: Role
+  name: cnf-readonly
+  apiGroup: rbac.authorization.k8s.io

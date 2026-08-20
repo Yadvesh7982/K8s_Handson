@@ -9,3 +9,5 @@ spec:
       image: nginx:1.27-alpine
       resources:
         requests: {cpu: "200m", memory: "128Mi"}     # more than any node has
+
+
