@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: smf-session-pvc
+  namespace: smf
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: cnf-local-fast
+  resources:
+    requests:
+      storage: 1Gi

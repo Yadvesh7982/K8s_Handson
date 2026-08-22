@@ -1,0 +1,70 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: upf-schema-migrate
+  namespace: upf-w
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: OnFailure
+
+      nodeSelector:
+        telco-plane: user
+
+      tolerations:
+        - key: telco-plane
+          operator: Equal
+          value: user
+          effect: NoSchedule
+
+      containers:
+        - name: migrate
+          image: busybox:1.36
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "migrating session schema v3 -> v4"
+              sleep 10
+              echo "migration complete"
+              exit 0
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: upf-userplane
+  namespace: upf-w
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      cnf: upf-userplane
+
+  template:
+    metadata:
+      labels:
+        cnf: upf-userplane
+
+    spec:
+      nodeSelector:
+        telco-plane: user
+
+      tolerations:
+        - key: telco-plane
+          operator: Equal
+          value: user
+          effect: NoSchedule
+
+      containers:
+        - name: upf
+          image: nginx:1.27-alpine
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+            limits:
+              cpu: "100m"
+              memory: "64Mi"

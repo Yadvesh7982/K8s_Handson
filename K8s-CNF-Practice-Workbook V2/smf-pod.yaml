@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: smf-sessiondb
+  namespace: smf
+spec:
+  containers:
+    - name: sessiondb
+      image: busybox:1.36
+      command:
+        - sh
+        - -c
+        - "while true; do echo session-store-running; sleep 10; done"
+      volumeMounts:
+        - name: session-data
+          mountPath: /data
+  volumes:
+    - name: session-data
+      persistentVolumeClaim:
+        claimName: smf-session-pvc

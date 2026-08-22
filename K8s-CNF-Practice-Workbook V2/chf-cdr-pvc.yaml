@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: chf-cdr
+  namespace: chf
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: cnf-local-fast
+  resources:
+    requests:
+      storage: 2Gi
