@@ -1,0 +1,62 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: upf-operator
+rules:
+  - apiGroups:
+      - cnf.telco.example.com
+    resources:
+      - upfdeployments
+      - upfdeployments/status
+      - upfdeployments/finalizers
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+      - statefulsets
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+
+  - apiGroups:
+      - ""
+    resources:
+      - services
+      - configmaps
+      - events
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: upf-operator
+subjects:
+  - kind: ServiceAccount
+    name: upf-operator
+    namespace: acme-system
+roleRef:
+  kind: ClusterRole
+  name: upf-operator
+  apiGroup: rbac.authorization.k8s.io

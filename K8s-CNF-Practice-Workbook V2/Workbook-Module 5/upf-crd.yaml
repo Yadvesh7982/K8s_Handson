@@ -1,0 +1,30 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: upfdeployments.cnf.telco.example.com
+spec:
+  group: cnf.telco.example.com
+  names:
+    kind: UPFDeployment
+    plural: upfdeployments
+    singular: upfdeployment
+    shortNames:
+      - upfd
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                sessionCapacity:
+                  type: integer
+                n3Interface:
+                  type: string
+                logLevel:
+                  type: string

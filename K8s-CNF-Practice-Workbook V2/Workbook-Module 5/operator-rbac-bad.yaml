@@ -1,0 +1,36 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: upf-operator
+rules:
+  - apiGroups:
+      - apps
+      - ""
+    resources:
+      - upfdeployments
+      - deployments
+      - services
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: upf-operator
+  namespace: upf-hyd
+subjects:
+  - kind: ServiceAccount
+    name: upf-operator
+    namespace: acme-system
+roleRef:
+  kind: ClusterRole
+  name: upf-operator
+  apiGroup: rbac.authorization.k8s.io
