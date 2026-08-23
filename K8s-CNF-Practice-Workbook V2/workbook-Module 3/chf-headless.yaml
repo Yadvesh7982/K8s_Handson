@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: chf-peer
+  namespace: chf-w
+spec:
+  clusterIP: None
+  selector:
+    cnf: chf-cluster
+  ports:
+    - port: 3868
+      name: diameter
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: chf-cluster
+  namespace: chf-w
+spec:
+  serviceName: chf-peer
+  replicas: 3
+  selector:
+    matchLabels:
+      cnf: chf-cluster
+  template:
+    metadata:
+      labels:
+        cnf: chf-cluster
+    spec:
+      containers:
+        - name: chf
+          image: nginx:1.27-alpine
